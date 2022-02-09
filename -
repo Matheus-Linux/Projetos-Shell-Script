@@ -1,0 +1,9 @@
+cmdhist        	on
+complete_fullquote	on
+extquote       	on
+force_fignore  	on
+hostcomplete   	on
+interactive_comments	on
+progcomp       	on
+promptvars     	on
+sourcepath     	on
