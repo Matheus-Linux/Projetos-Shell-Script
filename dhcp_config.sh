@@ -159,5 +159,16 @@ do
                         dialog --stdout --title "CONFIGURAÇÕES" \
                                 --textbox "$ARQUIVO" 0 0
                 ;;
+                9)     #Essa opção faz programa encerrar  
+                
+                        CONTADOR=0
+                        while [ "$CONTADOR" -le 100 ];
+                        do
+                              echo "$CONTADOR" | dialog --stdout --title "DHCP" \
+                              --gauge "Saindo..." 0 0 
+                              CONTADOR=$((CONTADOR + 20 )) 
+                              sleep 0.5 
+                              exit 0 
+                        done                      
         esac
 done

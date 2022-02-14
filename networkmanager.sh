@@ -4,7 +4,7 @@
 #----------------------------------------------------------------VARIAVEIS GLOBAIS-------------------------------------------------------------------#
 shopt -s &>-    #Ativa funções extglob
 TABELA="$( tr a-z A-Z  <<< "$(ip route)")" #Exibe tabela de toteamento
-INT="$(ip link show | sed -n /'enp0s[0-9]'/p | sed s/'<.*state'//g | sed s/'mode.*'//g | sed  s/^[0-9]://g)"  #Exibe todas as interfaces do sistema
+INT="$(ip link show | sed -n /'enp0s[0-9]'/p | sed s/'<.*state'//g | sed s/'mode.*'//g <(sed  s/^[0-9]://g))"  #Exibe todas as interfaces do sistema
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -39,8 +39,8 @@ fi
 
 #Função exibe todos IPs da máquina
 function_rede () {
-REDE="$(ip addr s | sed -n /inet[^inet6].*/p | sed s/'s.*'//g | sed s/"inet"/"ip interno"/g)"
-REDE="$(tr a-z A-Z <<< $REDE )"
+REDE="$(ip addr s | sed -n /inet[^inet6].*/p | sed s/'s.*'//g <(sed s/"inet"/"ip interno"/g))"
+REDE="$(echo ${REDE^^})"                  #Exibe todo conteúdo de rede em caixa alta             
 echo -e "\e[31;1m------Lista de IPs da máquina------\e[m
 \e[34;1m$REDE\e[m"
 }
@@ -85,7 +85,7 @@ case "$ESCOLHA"  in
                         read -p "Informe a rede conectado ao neighbor: "  VIZINHO
                         read -p "Deseja adicionar a rota? [s] [n] " CONTINUAR
                         CONTINUAR=$(echo ${CONTINUAR^^} )                       #Deixa tudo em caixa alta
-                        [[ "$CONTINUAR" == @(N|NAO|NÃO|NO|) ]] &&               #Testa se usuário desaja  continuar
+                        [[ "$CONTINUAR" == @(N|NAO|NÃO|NO|) ]] &&               #Testa se usuário deseja  continuar
                                 echo "Voltando..." && sleep 3                   
                         [[ "$CONTINUAR" == @(S|SIM|Y|YES) ]] &&
                                 echo "Aplicando as configurações..." && sleep 3
@@ -94,7 +94,7 @@ case "$ESCOLHA"  in
                 done
 
         ;;
-        #Opçao A seleciona adiciona IP em uma determina interface selecionada 
+        #Opçao A seleciona e adiciona IP em uma determina interface selecionada 
         A)
                 CONFIRMAR="N"
                 while [ "$CONFIRMAR" = "N" ];
@@ -116,6 +116,69 @@ case "$ESCOLHA"  in
 
                 done
 
+        ;;
+        #Opção r remove endereço IP de uma determinada interface
+        r)
+                clear
+                CONTINUAR="N"
+                while [ "$CONTINUAR" = "N" ];
+                do
+                        function_rede
+                        read -p "Informe o IP que deseja remover: " IPREMOVE
+                        read -p "Informe a Interface que está associoado o IP: " ETH
+                        #Bloco IF testa se IP existe no sistema
+                        if echo "$REDE" | grep -qo "$IPREMOVE"; then
+                                MASK="$(function_rede | grep "$IPREMOVE")"
+                                VETOR=($MASK)                #Expande a variável $MASK     
+                                VETOR=$(echo ${VETOR[2]:12}) #Filtra a penas o CIDR
+                                read -p "Deseja aplicar as configurações?"  CONFIGURE
+                                CONFIGURE="$(echo ${CONFIGURE^^})"
+                                [[ "$CONFIGURE" == @(S|SIM|YES|Y) ]] &&
+                                        for cont in $(seq 1 4)
+                                        do
+                                                echo -en "Aplicando configurações..."
+                                                sleep 0.5
+                                                echo -en "$cont"\r\r
+                                        done
+                                        ip addr del "$IPREMOVE$VETOR" dev "$ETH"
+                                        CONTINUAR="S"
+                                [[ "$CONFIGURE" == @(N|NO|NAO) ]] &&
+                                        CONTINUAR="N"
+                        else
+                                echo -e "\e[31;1mIP não consta no sistema!\e[m"
+                                sleep 0.5
+                                CONTINUAR="N"
+                        fi
+                done
+        ;;
+        #Opção v exibe os endereços IP da máquina 
+        v)
+                LOOP="S"
+                #Repete o laço até variável $LOOP !=S
+                while  [ "$LOOP" = "S" ]
+                do
+                        for cont in $(seq 1 5)
+                        do
+                                echo -en "Exibindo informações de IP..."
+                                sleep 0.5
+                                echo -en "$cont\r\r"
+                        done
+                        function_rede
+                        #Testa se usuário deseja ver informações de IP
+                        read -p "Deseja ver novamente os IPs ? [s] [n]: " CONTINUA
+                        CONTINUA="$(echo ${CONTINUA^^})" #Expande a variável $CONTINUA 
+                        [[ "$CONTINUA" == @(S|SIM|Y|YES) ]] &&  LOOP="S" || LOOP="N"
+                done
+        ;;
+        #Opção S Encerra o programa 
+        S)
+                read -p "Deseja mesmo sair? [s] [n] " SAIR
+                SAIR="$(echo ${SAIR^^} )"
+                [[ "$SAIR" == @(S|SIM|YES|Y) ]] &&
+                        echo "Encerrando..." ; sleep 3
+                        exit 0
+                [[ "$SAIR" == @(N|NAO|N|NO|NÃO) ]] &&
+                        continue
         ;;
 esac
 done
