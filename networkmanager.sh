@@ -3,7 +3,7 @@
 
 #----------------------------------------------------------------VARIAVEIS GLOBAIS-------------------------------------------------------------------#
 shopt -s &>-    #Ativa funções extglob
-TABELA="$( tr a-z A-Z  <<< "$(ip route)")" #Exibe tabela de toteamento
+TABELA="$( tr a-z A-Z  <(ip route))" #Exibe tabela de toteamento
 INT="$(ip link show | sed -n /'enp0s[0-9]'/p | sed s/'<.*state'//g | sed s/'mode.*'//g <(sed  s/^[0-9]://g))"  #Exibe todas as interfaces do sistema
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------#
