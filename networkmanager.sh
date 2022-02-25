@@ -1,12 +1,43 @@
 #!/bin/bash
 
 
+
+
 #----------------------------------------------------------------VARIAVEIS GLOBAIS-------------------------------------------------------------------#
 shopt -s &>-    #Ativa funções extglob
 TABELA="$( tr a-z A-Z  <(ip route))" #Exibe tabela de toteamento
 INT="$(ip link show | sed -n /'enp0s[0-9]'/p | sed s/'<.*state'//g | sed s/'mode.*'//g <(sed  s/^[0-9]://g))"  #Exibe todas as interfaces do sistema
 
-#------------------------------------------------------------------------------------------------------------------------------------------------------#
+#-----------------------------------------------------------------------------------------------------------------------------------------------------#
+
+
+#---------------------------------------------------------------------------------------------------------#
+# - Nome: networkmanager.sh                                                                               #
+# - Autor: Matheus Alexandre Almeida de Oliveira                                                          #
+# - Mantenedor: Matheus Alexandre Almeida de Oliveira                                                     #
+#                                                                                                         #
+# - Descrição: networkmanager.sh - Exibe informações sobre tabela de roteamento, Interfaces ativas        #
+#   e dasativadas na máquina. Pode criar rotas para outras máquinas em redes remotas, e adicionar IP      #
+#   em interfaces desejadas.                                                                              #       
+#                                                                                                         #                      
+#                                                                                                         #
+# - Exemplo:                                                                                              #      
+#                                                                                                         #      
+#   R  -   Adiciona Rota                                                                                  #
+#   A  -   Adiciona IP                                                                                    #      
+#   rr -   Remove IP                                                                                      #      
+#   D  -   Adciona DNS                                                                                    #
+#                                                                                                         #      
+#   "Escolha uma opção:"                                                                                  #
+#                                                                                                         #      
+#   Opção = VALOR                                                                                         #
+#                                                                                                         #      
+# - Versão:                                                                                               #
+#                                                                                                         #     
+#       v1.0, 11/01/2022: Matheus Alexandre                                                               #
+#       - Criação inicial do networkmanager.sh                                                            #      
+#                                                                                                         #      
+#---------------------------------------------------------------------------------------------------------#
 
 
 #Função exibe estado das interfaces, Ex: on/off
@@ -182,4 +213,3 @@ case "$ESCOLHA"  in
         ;;
 esac
 done
-
