@@ -201,6 +201,37 @@ case "$ESCOLHA"  in
                         [[ "$CONTINUA" == @(S|SIM|Y|YES) ]] &&  LOOP="S" || LOOP="N"
                 done
         ;;
+        #Opção D permite adicionar Servidores DNS no sistema
+        D)      
+                ERRO="S"
+                while [ "$ERRO" = "S" ];
+                do
+                        clear
+                        echo "Exibindo Lista de DNS..." && sleep 3
+                        while read ARQUIVO;  #Lê conteúdo de /etc/resolv.conf
+                        do
+                                echo "$ARQUIVO"
+                                sleep 1
+                        done  <<< $(grep -o "nameserver".* /etc/resolv.conf)  #Passa o conteúdo do arquivo para a variável
+                        read -p "Deseja adicinar um novo DNS? (s/n)" RESP     #$ARQUIVO
+                        RESP="$(echo ${RESP^^})"
+                        if [[ "$RESP" == @(S|SIM|Y|YES) ]]; then
+                                clear
+                                echo "Continuando..." && sleep 2
+                                read -p "Informa o novo DNS:" DNS
+                                if grep -q "$DNS" /etc/resolv.conf; then      #Testa de DNS existe 
+                                        echo -e "\e[31;1mErro! Endereço já existe.\e[m"
+                                        sleep 3
+                                        ERRO="S"
+                                else
+                                        echo "nameserver $DNS" >> /etc/resolv.conf  #Adiciona DNS ao arquivo
+                                        ERRO="S"
+                                fi
+                        else
+                                ERRO="N"
+                        fi
+                done
+        ;;
         #Opção S Encerra o programa 
         S)
                 read -p "Deseja mesmo sair? [s] [n] " SAIR
