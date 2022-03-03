@@ -1,6 +1,36 @@
 #!/bin/bash
 
 
+<<<<<<< HEAD
+=======
+#---------------------------------------------------------------------------------------------------------#
+# - Nome: networkmanager.sh                                                                               #
+# - Autor: Matheus Alexandre Almeida de Oliveira                                                          #
+# - Mantenedor: Matheus Alexandre Almeida de Oliveira                                                     #
+#                                                                                                         #
+# - Descrição: networkmanager.sh - Exibe informações sobre tabela de roteamento, Interfaces ativas        #
+#   e dasativadas na máquina. Pode criar rotas para outras máquinas em redes remotas, e adicionar IP      #
+#   em interfaces desejadas.                                                                              #       
+#                                                                                                         #                      
+#                                                                                                         #
+# - Exemplo:                                                                                              #      
+#                                                                                                         #      
+#   R  -   Adiciona Rota                                                                                  #
+#   A  -   Adiciona IP                                                                                    #      
+#   rr -   Remove IP                                                                                      #      
+#   D  -   Adciona DNS                                                                                    #
+#                                                                                                         #      
+#   "Escolha uma opção:"                                                                                  #
+#                                                                                                         #      
+#   Opção = VALOR                                                                                         #
+#                                                                                                         #      
+# - Versão:                                                                                               #
+#                                                                                                         #     
+#       v1.0, 11/01/2022: Matheus Alexandre                                                               #
+#       - Criação inicial do networkmanager.sh                                                            #      
+#                                                                                                         #      
+#---------------------------------------------------------------------------------------------------------#
+>>>>>>> d0d2247aa2b697e9ff5aa4c7fb469204859597fd
 
 
 #----------------------------------------------------------------VARIAVEIS GLOBAIS-------------------------------------------------------------------#
@@ -35,8 +65,10 @@ INT="$(ip link show | sed -n /'enp0s[0-9]'/p | sed s/'<.*state'//g | sed s/'mode
 # - Versão:                                                                                               #
 #                                                                                                         #     
 #       v1.0, 11/01/2022: Matheus Alexandre                                                               #
-#       - Criação inicial do networkmanager.sh                                                            #      
-#                                                                                                         #      
+#       - Criação inicial do networkmanager.sh                                                            #
+#                                                                                                         #
+#        v1.1, 01/03/2022: Matheus Alexandre                                                              #      
+#       - Adicionada opção de DNS                                                                         #      
 #---------------------------------------------------------------------------------------------------------#
 
 
